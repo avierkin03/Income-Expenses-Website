@@ -1,0 +1,46 @@
+{% extends 'base_auth.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+        <div class="col-md-4"></div>
+
+        <div class="col-md-4">
+            <div class="card mt-5">
+                <div class="card-body">
+
+                    <div class="card-title py-3">
+                        <h4>Register for a free account</h4>
+                    </div>
+
+                    <form action="{% url 'register' %}" method="post">
+                        {% csrf_token %}
+
+                        {% include 'partials/_messages.html' %}
+
+                        <div class="form-group py-2">
+                            <input type="text" name="username" value="{{fieldValues.username}}" id="usernameField" placeholder="Username" class="form-control form-control-sm">
+                        </div>
+                        <div class="username_invalid_feedback" style="display: none;"></div>
+                        <p class="text-sm text-success usernameSuccessOutput"></p>
+
+                        <div class="form-group py-2">
+                            <input type="email" name="email" value="{{fieldValues.email}}" id="emailField" placeholder="Email" class="form-control form-control-sm">
+                        </div>
+                        <div class="email_invalid_feedback" style="display: none;"></div>
+                        <p class="text-sm text-success emailSuccessOutput"></p>
+
+                        <div class="form-group py-2">
+                            <input type="password" name="password" id="passwordField" placeholder="Password" class="form-control form-control-sm">
+                            <small class="float-end py-3 showPasswordToggle">SHOW</small>
+                        </div>
+                        <input type="submit" value="Register" class="btn btn-primary w-100 submit-btn">
+                    </form>
+        
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4"></div>
+    </div>
+    <script src="{% static 'js/register.js' %}"></script>
+{% endblock %}

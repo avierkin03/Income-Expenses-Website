@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container mt-4">
+        
+        <div class="row">
+            <div class="col-md-10">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Expenses</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Edit Expense</li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="col-md-2">
+                <a href="{% url 'delete-expenses' expense.id %}" class="btn btn-danger btn-sm">Delete</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form action="{% url 'edit-expenses' expense.id %}" method="post">
+                    {% include 'partials/_messages.html' %}
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" value="{{ expense.amount }}" class="form-control form-control-sm" id="amount" name="amount" placeholder="Enter amount" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" value="{{ expense.description }}" class="form-control form-control-sm" id="description" name="description" placeholder="Enter description" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select class="form-control form-control-sm" id="category" name="category" required>
+                            <option value="{{ expense.category }}" selected>{{ expense.category }}</option>
+                            {% for category in categories %}
+                                {% if category.name != expense.category %}
+                                    <option value="{{ category.name }}">{{ category.name }}</option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="date">Date of Expense</label>
+                        <input type="date" class="form-control form-control-sm" id="date" name="expense_date" required>
+                    </div>
+                    <input type="submit" value="Update Expense" class="btn btn-primary btn-primary-sm mt-2">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
