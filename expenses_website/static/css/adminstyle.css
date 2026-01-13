@@ -1,0 +1,47 @@
+
+#header {
+    background: #213C51;
+    color: #ffffff;
+}
+
+#branding h1{
+    color: #ffffff;
+}
+
+div.breadcrumbs {
+    background: #6594B1;
+    color: #ffffff;
+}
+
+.login .submit-row{
+    padding: 0px !important;
+}
+
+ input[type=button], .submit-row input {
+    background: #213C51;
+    width: 100%;
+}
+
+.module caption, .inline-group h2 {
+    background: #213C51;
+}
+
+.theme-toggle svg.theme-icon-when-auto, .theme-toggle svg.theme-icon-when-dark, .theme-toggle svg.theme-icon-when-light {
+    color: #213C51;;
+}
+
+.module h2, .module caption, .inline-group h2{
+    background: #213C51;
+}
+
+.object-tools a.viewsitelink, .object-tools a.addlink {
+    background: #DDAED3;
+}
+
+.main , .main.shifted > #nav-sidebar, .toggle-nav-sidebar {
+    background: #EEEEEE;
+}
+
+.actions {
+    width: 90% !important;
+}
