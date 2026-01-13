@@ -1,18 +1,35 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Expense, Category
+from userpreferences.models import UserPreference
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.http import JsonResponse
+import json
+
+def search_expenses(request):
+    if request.method == "POST":
+        search_str = json.loads(request.body).get("searchText")
+        expenses = Expense.objects.filter(
+            amount__istartswith=search_str, owner=request.user) | Expense.objects.filter(
+            date__istartswith=search_str, owner=request.user) | Expense.objects.filter(
+            description__icontains=search_str, owner=request.user) | Expense.objects.filter(
+            category__icontains=search_str, owner=request.user)
+        data = expenses.values()
+        return JsonResponse(list(data), safe=False)
+
 
 @login_required(login_url='/authentication/login')
 def index(request):
     expenses = Expense.objects.filter(owner=request.user)
-    paginator = Paginator(expenses, 1)  # Show 5 expenses per page
+    paginator = Paginator(expenses, 5)  # Show 5 expenses per page
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+    currency = UserPreference.objects.get(user = request.user).currency
     context = {
         "expenses": expenses,
-        "page_obj": page_obj
+        "page_obj": page_obj,
+        "currency": currency
     }
     return render(request, "expenses/index.html", context)
 

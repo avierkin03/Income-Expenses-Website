@@ -20,7 +20,7 @@
                     </a> 
                 </li> 
                 <li class="nav-item"> 
-                    <a class="nav-link d-flex align-items-center gap-2" href="#"> 
+                    <a class="nav-link d-flex align-items-center gap-2" href="{% url 'incomes' %}"> 
                         <svg class="bi" aria-hidden="true"><use xlink:href="#cart"></use></svg>
                         Income
                     </a> 
@@ -82,7 +82,7 @@
                         {% csrf_token %}
                         <button type="submit" class="nav-link">
                             <svg class="bi" aria-hidden="true"><use xlink:href="#door-closed"></use></svg>
-                            Sign out
+                            Sign out ({{ request.user.username }})
                         </button>
                     </form>
                 </li> 

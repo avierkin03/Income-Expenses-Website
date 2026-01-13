@@ -3,15 +3,15 @@
     <div class="container mt-4">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="{% url 'expenses' %}">Expenses</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Add Expenses</li>
+                <li class="breadcrumb-item"><a href="{% url 'incomes' %}">Income</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Add Income</li>
             </ol>
         </nav>
 
         
         <div class="card">
             <div class="card-body">
-                <form action="{% url 'add-expenses'%}" method="post">
+                <form action="{% url 'add-income'%}" method="post">
                     {% include 'partials/_messages.html' %}
                     {% csrf_token %}
                     <div class="form-group">
@@ -23,19 +23,19 @@
                         <input type="text" value="{{ values.description }}" class="form-control form-control-sm" id="description" name="description" placeholder="Enter description" required>
                     </div>
                     <div class="form-group">
-                        <label for="category">Category</label>
-                        <select class="form-control form-control-sm" id="category" name="category" required>
-                            <option value="" disabled selected>Select category</option>
-                            {% for category in categories %}
-                                <option value="{{ category.name }}">{{ category.name }}</option>
+                        <label for="source">Sources</label>
+                        <select class="form-control form-control-sm" id="source" name="source" required>
+                            <option value="" disabled selected>Select source</option>
+                            {% for source in sources %}
+                                <option value="{{ source.name }}">{{ source.name }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="date">Date of Expense</label>
-                        <input type="date" class="form-control form-control-sm" id="date" name="expense_date" required>
+                        <label for="date">Date of Income</label>
+                        <input type="date" class="form-control form-control-sm" id="date" name="income_date" required>
                     </div>
-                    <input type="submit" value="Add Expense" class="btn btn-primary btn-primary-sm mt-2">
+                    <input type="submit" value="Add Income" class="btn btn-primary btn-primary-sm mt-2">
                 </form>
             </div>
         </div>
