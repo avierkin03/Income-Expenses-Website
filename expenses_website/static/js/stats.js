@@ -12,6 +12,10 @@ const renderChart = (data, labels)=>{
             }]
         },
         options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            radius: '100%',   
+            cutout: '85%',
             plugins: {
                 title: {
                     display: true,

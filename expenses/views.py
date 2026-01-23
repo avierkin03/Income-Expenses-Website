@@ -9,6 +9,12 @@ import json
 import csv
 import xlwt
 import datetime
+from django.conf import settings
+from pathlib import Path
+
+from django.template.loader import render_to_string
+from weasyprint import HTML
+from django.db.models import Sum
 
 def search_expenses(request):
     if request.method == "POST":
@@ -207,4 +213,19 @@ def export_excel(request):
     return response
 
 
+def export_pdf(request):
+    expenses = Expense.objects.filter(owner=request.user)
+    sum = expenses.aggregate(Sum("amount"))
+    logo_path = Path(settings.STATICFILES_DIRS[0]) / "img/company_logo.png"
 
+    html_string = render_to_string("expenses/pdf-output.html", {"expenses": expenses, "total": sum["amount__sum"], "logo_path": logo_path})
+
+    pdf_file = HTML(string=html_string).write_pdf()
+
+    response = HttpResponse(pdf_file, content_type="application/pdf")
+    response["Content-Disposition"] = (
+        f'inline; attachment; filename="expenses_'
+        f'{datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")}.pdf"'
+    )
+
+    return response

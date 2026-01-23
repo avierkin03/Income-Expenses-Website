@@ -21,10 +21,19 @@
             {% include 'partials/_messages.html' %}
 
             <div class="row">
-                <div class="col-md-8"></div>
+                <div class="col-md-8 d-flex gap-5">
+                    <a href="{% url 'export-excel' %}" class="btn btn-outline-success flex-fill text-center">
+                        Export Excel
+                    </a>
+                    <a href="{% url 'export-csv' %}" class="btn btn-outline-secondary flex-fill text-center">
+                        Export CSV
+                    </a>
+                    <a href="{% url 'export-pdf' %}" class="btn btn-outline-info flex-fill text-center">
+                        Export PDF
+                    </a>
+                </div>
+
                 <div class="col-md-4">
-                    <a href="{% url 'export-excel' %}" class="btn btn-primary">Export Excel</a>
-                    <a href="{% url 'export-csv' %}" class="btn btn-secondary">Export CSV</a>
                     <div class="form-group">
                         <input type="text" class="form-control" id="searchField" placeholder="Search">
                     </div>
@@ -49,7 +58,10 @@
                                 <td>{{ expense.category }}</td>
                                 <td>{{ expense.description }}</td>
                                 <td>{{ expense.date }}</td>
-                                <td><a href="{% url 'edit-expenses' expense.id %}" class="btn btn-sm btn-outline-primary">Edit</a></td>
+                                <td>
+                                    <a href="{% url 'edit-expenses' expense.id %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <a href="{% url 'delete-expenses' expense.id %}" class="btn btn-sm btn-outline-danger">Delete</a>
+                                </td>
                             </tr>
                         {% empty %}
                             <tr>
