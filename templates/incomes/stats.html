@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class = "col-md-10">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="">Income Summary</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Summary</li>
+                    </ol>
+                </nav>
+            </div>
+
+            <div class = "col-md-2">
+                <a href="#" class="btn btn-primary">Back</a>
+            </div>
+
+            <!-- Метрики -->
+            <div class="row" id="metrics-row"></div>
+
+            <!-- Вибір періоду -->
+            <div class="mb-4">
+                <div class="btn-group flex-wrap mb-3" role="group">
+                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="30d">30 днів</button>
+                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="3m">3 місяці</button>
+                    <button type="button" class="btn btn-outline-secondary period-btn active" data-period="6m">6 місяців</button>
+                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="12m">1 рік</button>
+                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="all">Весь час</button>
+                </div>
+
+                <div id="custom-period" class="mt-2 d-none">
+                    <label>Від:</label>
+                    <input type="date" id="date-from" class="form-control d-inline-block w-auto mx-2">
+                    <label>До:</label>
+                    <input type="date" id="date-to" class="form-control d-inline-block w-auto mx-2">
+                    <button class="btn btn-primary btn-sm" id="apply-custom">Застосувати</button>
+                </div>
+            </div>
+
+            <!-- Вибір типу чарту -->
+            <div class="mb-4">
+                <label class="form-label me-2">Тип діаграми:</label>
+                <select id="chartType" class="form-select w-auto d-inline-block">
+                    <option value="doughnut" selected>Doughnut</option>
+                    <option value="pie">Pie</option>
+                    <option value="bar">Bar</option>
+                </select>
+            </div>
+
+            <!-- Сам чарт -->
+            <div style="height: 450px; position: relative;">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/income_stats.js' %}"></script>
+{% endblock %}

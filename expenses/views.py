@@ -135,6 +135,7 @@ def delete_expense(request, id):
     return redirect("expenses")
 
 
+@login_required(login_url='/authentication/login')
 def expense_category_summary(request):
     todays_date = datetime.date.today()
     six_months_ago = todays_date-datetime.timedelta(days=30*6)
@@ -162,6 +163,7 @@ def expense_category_summary(request):
     return JsonResponse({"expense_category_data": final_rep}, safe=False)
 
 
+@login_required(login_url='/authentication/login')
 def stats_view(request):
     return render(request, "expenses/stats.html")    
 
@@ -216,9 +218,8 @@ def export_excel(request):
 def export_pdf(request):
     expenses = Expense.objects.filter(owner=request.user)
     sum = expenses.aggregate(Sum("amount"))
-    logo_path = Path(settings.STATICFILES_DIRS[0]) / "img/company_logo.png"
 
-    html_string = render_to_string("expenses/pdf-output.html", {"expenses": expenses, "total": sum["amount__sum"], "logo_path": logo_path})
+    html_string = render_to_string("expenses/pdf-output.html", {"expenses": expenses, "total": sum["amount__sum"]})
 
     pdf_file = HTML(string=html_string).write_pdf()
 
