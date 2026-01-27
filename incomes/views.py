@@ -255,7 +255,7 @@ def income_category_summary(request):
         start_date = today - datetime.timedelta(days=180)
         end_date = today
 
-    # Запит витрат
+    # Запит доходів
     incomes = Income.objects.filter(owner=request.user)
     if start_date:
         incomes = incomes.filter(date__gte=start_date)
@@ -313,7 +313,7 @@ def income_category_summary(request):
     }
 
     return JsonResponse({
-        "income_source_data": {k: float(v) for k, v in final_rep.items()},  # для фронтенду — float
+        "income_source_data": {k: float(v) for k, v in final_rep.items()}, 
         "stats": stats,
         "currency": currency,
         "period": {

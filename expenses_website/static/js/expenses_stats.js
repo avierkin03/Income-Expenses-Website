@@ -24,7 +24,7 @@ function renderOrUpdateChart(data, labels) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Income',
+                label: 'Expenses',
                 data: data,
                 backgroundColor: [
                     '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
@@ -43,7 +43,7 @@ function renderOrUpdateChart(data, labels) {
                 },
                 title: {
                     display: true,
-                    text: 'Income by source',
+                    text: 'Expenses by source',
                     font: { size: 18 }
                 }
             },
@@ -58,11 +58,11 @@ function updateMetrics(stats) {
     row.innerHTML = '';
 
     const metrics = [
-        { title: "Total income", value: stats.total.toLocaleString('uk-UA', {style: 'currency', currency: currency}) },
+        { title: "Total expenses", value: stats.total.toLocaleString('uk-UA', {style: 'currency', currency: currency}) },
         { title: "Daily average", value: stats.avg_per_day.toLocaleString('uk-UA', {style: 'currency', currency: currency}) },
         { title: "Monthly average", value: stats.avg_per_month.toLocaleString('uk-UA', {style: 'currency', currency: currency})},
         { title: "Transactions", value: stats.transaction_count },
-        { title: "Top income source", value: `${stats.top_source} (${stats.top_percent}%)` }
+        { title: "Top expense category", value: `${stats.top_category} (${stats.top_percent}%)` }
     ];
 
     metrics.forEach(m => {
@@ -72,7 +72,7 @@ function updateMetrics(stats) {
             <div class="card h-100 shadow-sm border-0">
                 <div class="card-body text-center">
                     <h6 class="card-subtitle mb-2 text-muted">${m.title}</h6>
-                    <h4 class="card-title fw-bold">${m.value} ${m.unit || ''}</h4>
+                    <h4 class="card-title fw-bold">${m.value}</h4>
                 </div>
             </div>
         `;
@@ -82,7 +82,7 @@ function updateMetrics(stats) {
 
 // Завантаження даних з сервера
 function loadChartData() {
-    let url = `/income/income-category-summary?period=${currentPeriod}`;
+    let url = `/expense-category-summary?period=${currentPeriod}`;
 
     if (currentPeriod === 'custom' && customFrom && customTo) {
         url += `&from=${customFrom}&to=${customTo}`;
@@ -91,7 +91,7 @@ function loadChartData() {
     fetch(url)
         .then(res => res.json())
         .then(results => {
-            const source_data = results.income_source_data;
+            const source_data = results.expenses_source_data;
             const labels = Object.keys(source_data);
             const data = Object.values(source_data);
             // Оновлюємо валюту з бекенду

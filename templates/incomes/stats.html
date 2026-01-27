@@ -12,35 +12,32 @@
                 </nav>
             </div>
 
-            <div class = "col-md-2">
-                <a href="#" class="btn btn-primary">Back</a>
-            </div>
-
             <!-- Метрики -->
             <div class="row" id="metrics-row"></div>
 
             <!-- Вибір періоду -->
             <div class="mb-4">
                 <div class="btn-group flex-wrap mb-3" role="group">
-                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="30d">30 днів</button>
-                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="3m">3 місяці</button>
-                    <button type="button" class="btn btn-outline-secondary period-btn active" data-period="6m">6 місяців</button>
-                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="12m">1 рік</button>
-                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="all">Весь час</button>
+                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="30d">30 days</button>
+                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="3m">3 months</button>
+                    <button type="button" class="btn btn-outline-secondary period-btn active" data-period="6m">6 months</button>
+                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="12m">1 year</button>
+                    <button type="button" class="btn btn-outline-secondary period-btn" data-period="all">All time</button>
+                    <button class="btn btn-outline-secondary period-btn" data-period="custom">Date range</button>
                 </div>
 
                 <div id="custom-period" class="mt-2 d-none">
-                    <label>Від:</label>
+                    <label for="date-from">From:</label>
                     <input type="date" id="date-from" class="form-control d-inline-block w-auto mx-2">
-                    <label>До:</label>
+                    <label for="date-to">To:</label>
                     <input type="date" id="date-to" class="form-control d-inline-block w-auto mx-2">
-                    <button class="btn btn-primary btn-sm" id="apply-custom">Застосувати</button>
+                    <button class="btn btn-primary btn-sm" id="apply-custom">Apply</button>
                 </div>
             </div>
 
             <!-- Вибір типу чарту -->
             <div class="mb-4">
-                <label class="form-label me-2">Тип діаграми:</label>
+                <label class="form-label me-2">Chart type:</label>
                 <select id="chartType" class="form-select w-auto d-inline-block">
                     <option value="doughnut" selected>Doughnut</option>
                     <option value="pie">Pie</option>

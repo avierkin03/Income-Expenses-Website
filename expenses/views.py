@@ -11,6 +11,7 @@ import xlwt
 import datetime
 from django.conf import settings
 from pathlib import Path
+from decimal import Decimal
 
 from django.template.loader import render_to_string
 from weasyprint import HTML
@@ -135,39 +136,6 @@ def delete_expense(request, id):
     return redirect("expenses")
 
 
-@login_required(login_url='/authentication/login')
-def expense_category_summary(request):
-    todays_date = datetime.date.today()
-    six_months_ago = todays_date-datetime.timedelta(days=30*6)
-    expenses = Expense.objects.filter(owner=request.user, date__gte=six_months_ago, date__lte=todays_date)
-    final_rep = {}
-
-    def get_category(expense):
-        return expense.category
-    
-    category_list = list(set(map(get_category, expenses)))
-
-    def get_expense_category_amount(category):
-        amount = 0
-        filtered_by_category = expenses.filter(category = category)
-
-        for item in filtered_by_category:
-            amount += item.amount
-
-        return amount
-
-    for x in expenses:
-        for category in category_list:
-            final_rep[category] = get_expense_category_amount(category)
-
-    return JsonResponse({"expense_category_data": final_rep}, safe=False)
-
-
-@login_required(login_url='/authentication/login')
-def stats_view(request):
-    return render(request, "expenses/stats.html")    
-
-
 def export_csv(request):
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = (
@@ -230,3 +198,132 @@ def export_pdf(request):
     )
 
     return response
+
+
+@login_required(login_url='/authentication/login')
+def stats_view(request):
+    return render(request, "expenses/stats.html")    
+
+
+def get_currency_symbol(currency_str):
+    """
+    Витягує короткий символ або код валюти з рядка типу "UAH - Ukrainian Hryvnia"
+    """
+    if not currency_str:
+        return '₴'
+    
+    if len(currency_str) <= 3:
+        return currency_str.upper()
+    
+    if ' - ' in currency_str:
+        code = currency_str.split(' - ')[0].strip().upper()
+        return code
+    
+    return currency_str.upper() 
+
+
+@login_required(login_url='/authentication/login')
+def expense_category_summary(request):
+    today = datetime.date.today()
+    period = request.GET.get('period', '6m')
+    from_date_str = request.GET.get('from')
+    to_date_str = request.GET.get('to')
+
+    # Визначаємо дати початку та кінця періоду
+    if period == '30d':
+        start_date = today - datetime.timedelta(days=30)
+        end_date = today
+    elif period == '3m':
+        start_date = today - datetime.timedelta(days=90)
+        end_date = today
+    elif period == '6m':
+        start_date = today - datetime.timedelta(days=180)
+        end_date = today
+    elif period == '12m':
+        start_date = today - datetime.timedelta(days=365)
+        end_date = today
+    elif period == 'all':
+        start_date = None
+        end_date = today
+    elif period == 'custom' and from_date_str and to_date_str:
+        try:
+            start_date = datetime.datetime.strptime(from_date_str, '%Y-%m-%d').date()
+            end_date = datetime.datetime.strptime(to_date_str, '%Y-%m-%d').date()
+        except ValueError:
+            start_date = today - datetime.timedelta(days=180)
+            end_date = today
+    else:
+        start_date = today - datetime.timedelta(days=180)
+        end_date = today
+
+    # Запит витрат
+    expenses = Expense.objects.filter(owner=request.user)
+    if start_date:
+        expenses = expenses.filter(date__gte=start_date)
+    expenses = expenses.filter(date__lte=end_date)
+
+    # Підрахунок по категоріях (все в Decimal)
+    final_rep = {}
+    category_list = expenses.values_list('category', flat=True).distinct()
+
+    for category in category_list:
+        amount = expenses.filter(category=category).aggregate(total=Sum('amount'))['total'] or Decimal('0')
+        final_rep[category] = amount   # залишаємо Decimal
+
+    # Ключові метрики
+    total = expenses.aggregate(total=Sum('amount'))['total'] or Decimal('0')
+    transaction_count = expenses.count()
+
+    # Кількість днів у періоді
+    if start_date:
+        days_in_period = (end_date - start_date).days + 1
+    else:
+        oldest = expenses.order_by('date').first()
+        days_in_period = (today - oldest.date).days + 1 if oldest else 1
+
+    days_in_period = Decimal(days_in_period)  # для точних обчислень
+
+    avg_per_day = total / days_in_period if days_in_period > 0 else Decimal('0')
+    avg_per_month = total / Decimal('30.4375') if days_in_period > 0 else Decimal('0')
+
+    # Найбільша категорія та відсоток
+    if final_rep:
+        top_source = max(final_rep.items(), key=lambda x: x[1])
+        top_source_name = top_source[0]
+        top_source_amount = top_source[1]
+        top_percent = float((top_source_amount / total) * 100) if total > 0 else 0.0
+    else:
+        top_source_name = "—"
+        top_percent = 0.0
+    
+    # Отримуємо валюту користувача
+    try:
+        user_pref = UserPreference.objects.get(user=request.user)
+        raw_currency = user_pref.currency or 'UAH - Ukrainian Hryvnia'
+        currency = get_currency_symbol(raw_currency)
+    except UserPreference.DoesNotExist:
+        currency = '₴'
+
+    stats = {
+        "total": round(float(total), 2),
+        "transaction_count": transaction_count,
+        "avg_per_day": round(float(avg_per_day), 2),
+        "avg_per_month": round(float(avg_per_month), 2),
+        "top_category": top_source_name,
+        "top_percent": round(top_percent, 1),
+    }
+
+    return JsonResponse({
+        "expenses_source_data": {k: float(v) for k, v in final_rep.items()}, 
+        "stats": stats,
+        "currency": currency,
+        "period": {
+            "start": str(start_date) if start_date else None,
+            "end": str(end_date)
+        }
+    }, safe=False)
+
+
+
+
+
