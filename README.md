@@ -91,3 +91,19 @@ Implemented **export** of income and expense data in **PDF, CSV, XLSX format**.
 ---
 
 ## 📷 Screenshots
+| Login Page | User Preferences Page |
+|-------------|--------------|
+| ![Login Page](screenshots\login_page.jpg) | ![User Preferences Page](screenshots\user_preferences.jpg) |
+
+| Income Page | Expenses Page |
+|-------------|--------------|
+| ![Income Page](screenshots\income_page.jpg) | ![Expenses Page](screenshots\expenses_page.jpg) |
+
+
+| Add Income Page | Add Expenses Page |
+|-------------|--------------|
+| ![Add Income Page](screenshots\income_stats_page.png) | ![Add Expenses Page](screenshots\expenses_stats_page.png) |
+
+| Income Stats Page | Expenses Stats Page |
+|-------------|--------------|
+| ![Income Stats Page](screenshots\add_income_page.jpg) | ![Expenses Stats Page](screenshots\add_expenses_page.jpg) |
