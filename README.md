@@ -107,3 +107,47 @@ Implemented **export** of income and expense data in **PDF, CSV, XLSX format**.
 | Income Stats Page | Expenses Stats Page |
 |-------------|--------------|
 | ![Income Stats Page](screenshots/add_income_page.jpg) | ![Expenses Stats Page](screenshots/add_expenses_page.jpg) |
+
+---
+
+## ⬇ Installation
+
+1. **Clone the Repository**:
+
+   ```bash
+   git clone https://github.com/your-username/Income-Expenses-Website.git
+   cd Income-Expenses-Website
+   ```
+
+2. **Set Up a Virtual Environment**:
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install Dependencies**:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Apply Migrations**:
+
+   ```bash
+   python manage.py migrate
+   ```
+
+5. **Create a Superuser (Optional)**:
+
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+6. **Run the Development Server**:
+
+   ```bash
+   python manage.py runserver
+   ```
+
+7. Access the application at `http://localhost:8000`.
